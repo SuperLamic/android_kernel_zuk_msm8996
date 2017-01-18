@@ -1,4 +1,4 @@
-/* Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -155,7 +155,6 @@ int msm_camera_fill_vreg_params(struct camera_vreg_t *cam_vreg,
 			if (j == num_vreg)
 				power_setting[i].seq_val = INVALID_VREG;
 			break;
-
 		case CAM_V_CUSTOM2:
 			for (j = 0; j < num_vreg; j++) {
 				if (!strcmp(cam_vreg[j].reg_name,
@@ -184,7 +183,6 @@ int msm_camera_fill_vreg_params(struct camera_vreg_t *cam_vreg,
 			break;
 		}
 	}
-
 	return 0;
 }
 
@@ -280,6 +278,22 @@ int msm_sensor_get_sub_module_index(struct device_node *of_node,
 			goto ERROR;
 		}
 		sensor_info->subdev_id[SUB_MODULE_LED_FLASH] = val;
+		of_node_put(src_node);
+		src_node = NULL;
+	}
+
+	src_node = of_parse_phandle(of_node, "qcom,ir-led-src", 0);
+	if (!src_node) {
+		CDBG("%s:%d src_node NULL\n", __func__, __LINE__);
+	} else {
+		rc = of_property_read_u32(src_node, "cell-index", &val);
+		CDBG("%s qcom,ir led cell index %d, rc %d\n", __func__,
+			val, rc);
+		if (rc < 0) {
+			pr_err("%s:%d failed %d\n", __func__, __LINE__, rc);
+			goto ERROR;
+		}
+		sensor_info->subdev_id[SUB_MODULE_IR_LED] = val;
 		of_node_put(src_node);
 		src_node = NULL;
 	}
@@ -761,6 +775,53 @@ int msm_camera_init_gpio_pin_tbl(struct device_node *of_node,
 		pr_err("%s failed %d\n", __func__, __LINE__);
 		rc = -ENOMEM;
 		return rc;
+	}
+
+	rc = of_property_read_u32(of_node, "qcom,gpio-ir-p", &val);
+	if (rc != -EINVAL) {
+		if (rc < 0) {
+			pr_err("%s:%d read qcom,gpio-ir-p failed rc %d\n",
+				__func__, __LINE__, rc);
+			goto ERROR;
+		} else if (val >= gpio_array_size) {
+			pr_err("%s:%d qcom,gpio-ir-p invalid %d\n",
+				__func__, __LINE__, val);
+			rc = -EINVAL;
+			goto ERROR;
+		}
+
+		gconf->gpio_num_info->gpio_num[IR_CUT_FILTER_GPIO_P] =
+			gpio_array[val];
+		gconf->gpio_num_info->valid[IR_CUT_FILTER_GPIO_P] = 1;
+
+		CDBG("%s qcom,gpio-ir-p %d\n", __func__,
+			gconf->gpio_num_info->gpio_num[IR_CUT_FILTER_GPIO_P]);
+	} else {
+		rc = 0;
+	}
+
+	rc = of_property_read_u32(of_node, "qcom,gpio-ir-m", &val);
+	if (rc != -EINVAL) {
+		if (rc < 0) {
+			pr_err("%s:%d read qcom,gpio-ir-m failed rc %d\n",
+				__func__, __LINE__, rc);
+			goto ERROR;
+		} else if (val >= gpio_array_size) {
+			pr_err("%s:%d qcom,gpio-ir-m invalid %d\n",
+				__func__, __LINE__, val);
+			rc = -EINVAL;
+			goto ERROR;
+		}
+
+		gconf->gpio_num_info->gpio_num[IR_CUT_FILTER_GPIO_M] =
+			gpio_array[val];
+
+		gconf->gpio_num_info->valid[IR_CUT_FILTER_GPIO_M] = 1;
+
+		CDBG("%s qcom,gpio-ir-m %d\n", __func__,
+			gconf->gpio_num_info->gpio_num[IR_CUT_FILTER_GPIO_M]);
+	} else {
+		rc = 0;
 	}
 
 	rc = of_property_read_u32(of_node, "qcom,gpio-vana", &val);
@@ -1263,7 +1324,7 @@ int msm_camera_power_up(struct msm_camera_power_ctrl_t *ctrl,
 		switch (power_setting->seq_type) {
 		case SENSOR_CLK:
 			if (power_setting->seq_val >= ctrl->clk_info_size) {
-				pr_err("%s clk index %d >= max %d\n", __func__,
+				pr_err("%s clk index %d >= max %zu\n", __func__,
 					power_setting->seq_val,
 					ctrl->clk_info_size);
 				goto power_up_failed;
@@ -1309,6 +1370,7 @@ int msm_camera_power_up(struct msm_camera_power_ctrl_t *ctrl,
 		case SENSOR_VREG:
 			if (power_setting->seq_val == INVALID_VREG)
 				break;
+
 			if (power_setting->seq_val >= CAM_VREG_MAX) {
 				pr_err("%s vreg index %d >= max %d\n", __func__,
 					power_setting->seq_val,
@@ -1323,7 +1385,7 @@ int msm_camera_power_up(struct msm_camera_power_ctrl_t *ctrl,
 					&power_setting->data[0],
 					1);
 			else
-				pr_err("ERR:%s: %d usr_idx:%d dts_idx:%d\n",
+				pr_err("%s: %d usr_idx:%d dts_idx:%d\n",
 					__func__, __LINE__,
 					power_setting->seq_val, ctrl->num_vreg);
 			break;
@@ -1352,7 +1414,6 @@ int msm_camera_power_up(struct msm_camera_power_ctrl_t *ctrl,
 			goto power_up_failed;
 		}
 	}
-
 	CDBG("%s exit\n", __func__);
 	return 0;
 power_up_failed:
