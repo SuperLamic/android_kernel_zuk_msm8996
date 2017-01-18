@@ -45,7 +45,12 @@
 #define MSM_CAMERA_SUBDEV_SENSOR_INIT  14
 #define MSM_CAMERA_SUBDEV_OIS          15
 #define MSM_CAMERA_SUBDEV_FLASH        16
+<<<<<<< daa67ae8874158f61bfad8cf4d5d4ab6a15196bd
 #define MSM_CAMERA_SUBDEV_EXT          17
+=======
+#define MSM_CAMERA_SUBDEV_IR_LED       17
+#define MSM_CAMERA_SUBDEV_EXT          18
+>>>>>>> Revert "msm: camera: Add a driver to control IR CUT device"
 
 #define MSM_MAX_CAMERA_SENSORS  5
 
