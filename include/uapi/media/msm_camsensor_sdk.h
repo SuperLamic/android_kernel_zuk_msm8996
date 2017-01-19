@@ -181,6 +181,7 @@ enum msm_flash_cfg_type_t {
 	CFG_FLASH_HIGH,
 };
 
+<<<<<<< 4f561194c9520f781cd794fc7735b704efbfddea
 <<<<<<< daa67ae8874158f61bfad8cf4d5d4ab6a15196bd
 =======
 enum msm_ir_led_cfg_type_t {
@@ -195,6 +196,8 @@ enum msm_ir_led_cfg_type_t {
 #define CFG_IR_LED_ON CFG_IR_LED_ON
 
 >>>>>>> Revert "msm: camera: Add a driver to control IR CUT device"
+=======
+>>>>>>> Revert "msm: camera: Add a driver to control IR LED device"
 enum msm_sensor_output_format_t {
 	MSM_SENSOR_BAYER,
 	MSM_SENSOR_YCBCR,

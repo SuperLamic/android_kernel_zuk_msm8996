@@ -72,6 +72,7 @@ struct csid_cfg_data32 {
 	} cfg;
 };
 
+<<<<<<< 4f561194c9520f781cd794fc7735b704efbfddea
 <<<<<<< daa67ae8874158f61bfad8cf4d5d4ab6a15196bd
 =======
 struct msm_ir_led_cfg_data_t32 {
@@ -81,6 +82,8 @@ struct msm_ir_led_cfg_data_t32 {
 };
 
 >>>>>>> Revert "msm: camera: Add a driver to control IR CUT device"
+=======
+>>>>>>> Revert "msm: camera: Add a driver to control IR LED device"
 struct eeprom_read_t32 {
 	compat_uptr_t dbuffer;
 	uint32_t num_bytes;
@@ -268,10 +271,13 @@ struct msm_flash_cfg_data_t32 {
 
 #define VIDIOC_MSM_FLASH_CFG32 \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 13, struct msm_flash_cfg_data_t32)
+<<<<<<< 4f561194c9520f781cd794fc7735b704efbfddea
 
 <<<<<<< daa67ae8874158f61bfad8cf4d5d4ab6a15196bd
 =======
 #define VIDIOC_MSM_IR_LED_CFG32 \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 14, struct msm_ir_led_cfg_data_t32)
 >>>>>>> Revert "msm: camera: Add a driver to control IR CUT device"
+=======
+>>>>>>> Revert "msm: camera: Add a driver to control IR LED device"
 #endif
