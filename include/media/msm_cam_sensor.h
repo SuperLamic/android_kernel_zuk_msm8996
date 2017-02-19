@@ -118,7 +118,6 @@ struct msm_camera_i2c_seq_reg_setting32 {
 	enum msm_camera_i2c_reg_addr_type addr_type;
 	uint16_t delay;
 };
-#endif
 
 struct msm_camera_i2c_reg_setting32 {
 	compat_uptr_t reg_setting;
@@ -271,6 +270,7 @@ struct msm_flash_cfg_data_t32 {
 
 #define VIDIOC_MSM_FLASH_CFG32 \
 	_IOWR('V', BASE_VIDIOC_PRIVATE + 13, struct msm_flash_cfg_data_t32)
+<<<<<<< db7579f528fcd6de76f4aca9d05cd5e5105ded53
 <<<<<<< 4f561194c9520f781cd794fc7735b704efbfddea
 
 <<<<<<< daa67ae8874158f61bfad8cf4d5d4ab6a15196bd
@@ -280,4 +280,10 @@ struct msm_flash_cfg_data_t32 {
 >>>>>>> Revert "msm: camera: Add a driver to control IR CUT device"
 =======
 >>>>>>> Revert "msm: camera: Add a driver to control IR LED device"
+=======
+
+>>>>>>> camera: Update driver
 #endif
+
+#endif
+
